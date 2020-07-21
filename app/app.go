@@ -33,7 +33,6 @@ import (
 	"github.com/konstellation/kn-sdk/types"
 	kcrisis "github.com/konstellation/kn-sdk/x/crisis"
 	kdistribution "github.com/konstellation/kn-sdk/x/distribution"
-	kgenaccounts "github.com/konstellation/kn-sdk/x/genaccounts"
 	kgov "github.com/konstellation/kn-sdk/x/gov"
 	kmint "github.com/konstellation/kn-sdk/x/mint"
 	kstaking "github.com/konstellation/kn-sdk/x/staking"
@@ -60,7 +59,6 @@ var (
 
 	// ModuleBasicManager is in charge of setting up basic module elements
 	ModuleBasics = module.NewBasicManager(
-		//genaccounts.AppModuleBasic{},
 		genutil.AppModuleBasic{},
 		auth.AppModuleBasic{},
 		bank.AppModuleBasic{},
@@ -77,7 +75,6 @@ var (
 
 	// GenesisUpdaters is in charge of changing default genesis provided by cosmos sdk modules
 	GenesisUpdaters = types.NewGenesisUpdaters(
-		kgenaccounts.GenesisUpdater{},
 		kcrisis.GenesisUpdater{},
 		kstaking.GenesisUpdater{},
 		kdistribution.GenesisUpdater{},

@@ -1,6 +1,6 @@
 module github.com/konstellation/konstellation
 
-go 1.13
+go 1.14
 
 require (
 	github.com/Masterminds/semver v1.5.0 // indirect
@@ -26,14 +26,14 @@ require (
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/rs/cors v1.7.0
 	github.com/sdboyer/constext v0.0.0-20170321163424-836a14457353 // indirect
-	github.com/spf13/cobra v0.0.6
+	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5
-	github.com/spf13/viper v1.6.2
+	github.com/spf13/viper v1.6.3
 	github.com/stevenmatthewt/semantics v2.0.4+incompatible // indirect
 	github.com/tendermint/go-amino v0.15.1
 	github.com/tendermint/iavl v0.13.2
-	github.com/tendermint/tendermint v0.33.3
-	github.com/tendermint/tm-db v0.5.0
+	github.com/tendermint/tendermint v0.33.6
+	github.com/tendermint/tm-db v0.5.1
 )
 
 replace github.com/konstellation/kn-sdk => ../kn-sdk
