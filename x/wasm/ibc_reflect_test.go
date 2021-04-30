@@ -1,11 +1,11 @@
 package wasm_test
 
 import (
+	"github.com/konstellation/konstellation/x/wasm/ibctesting"
+	wasmkeeper "github.com/konstellation/konstellation/x/wasm/internal/keeper"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	channeltypes "github.com/cosmos/cosmos-sdk/x/ibc/core/04-channel/types"
 	ibcexported "github.com/cosmos/cosmos-sdk/x/ibc/core/exported"
-	"github.com/konstellation/konstellation/x/wasm/ibctesting"
-	wasmkeeper "github.com/konstellation/konstellation/x/wasm/keeper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -20,14 +20,14 @@ func TestIBCReflectContract(t *testing.T) {
 	coordinator.CommitBlock(chainA, chainB)
 
 	initMsg := []byte(`{}`)
-	codeID := chainA.StoreCodeFile("./keeper/testdata/ibc_reflect_send.wasm").CodeID
+	codeID := chainA.StoreCodeFile("./internal/keeper/testdata/ibc_reflect_send.wasm").CodeID
 	sendContractAddr := chainA.InstantiateContract(codeID, initMsg)
 
-	reflectID := chainB.StoreCodeFile("./keeper/testdata/reflect.wasm").CodeID
+	reflectID := chainB.StoreCodeFile("./internal/keeper/testdata/reflect.wasm").CodeID
 	initMsg = wasmkeeper.IBCReflectInitMsg{
 		ReflectCodeID: reflectID,
 	}.GetBytes(t)
-	codeID = chainB.StoreCodeFile("./keeper/testdata/ibc_reflect.wasm").CodeID
+	codeID = chainB.StoreCodeFile("./internal/keeper/testdata/ibc_reflect.wasm").CodeID
 
 	reflectContractAddr := chainB.InstantiateContract(codeID, initMsg)
 	var (

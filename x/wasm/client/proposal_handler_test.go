@@ -9,11 +9,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/konstellation/konstellation/x/wasm/internal/keeper"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/gorilla/mux"
-	"github.com/konstellation/konstellation/x/wasm/keeper"
 	"github.com/stretchr/testify/require"
 )
 

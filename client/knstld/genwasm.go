@@ -14,13 +14,12 @@ func AddGenesisWasmMsgCmd(defaultNodeHome string) *cobra.Command {
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
-	genesisIO := wasmcli.NewDefaultGenesisIO()
 	txCmd.AddCommand(
-		wasmcli.GenesisStoreCodeCmd(defaultNodeHome, genesisIO),
-		wasmcli.GenesisInstantiateContractCmd(defaultNodeHome, genesisIO),
-		wasmcli.GenesisExecuteContractCmd(defaultNodeHome, genesisIO),
-		wasmcli.GenesisListContractsCmd(defaultNodeHome, genesisIO),
-		wasmcli.GenesisListCodesCmd(defaultNodeHome, genesisIO),
+		wasmcli.GenesisStoreCodeCmd(defaultNodeHome),
+		wasmcli.GenesisInstantiateContractCmd(defaultNodeHome),
+		wasmcli.GenesisExecuteContractCmd(defaultNodeHome),
+		wasmcli.GenesisListContractsCmd(defaultNodeHome),
+		wasmcli.GenesisListCodesCmd(defaultNodeHome),
 	)
 	return txCmd
 }

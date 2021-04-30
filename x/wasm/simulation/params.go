@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"math/rand"
 
+	"github.com/konstellation/konstellation/x/wasm/internal/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/konstellation/konstellation/x/wasm/types"
 )
 
 func ParamChanges(r *rand.Rand, cdc codec.Marshaler) []simtypes.ParamChange {

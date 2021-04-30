@@ -6,13 +6,13 @@ import (
 	"io/ioutil"
 	"strconv"
 
+	wasmUtils "github.com/konstellation/konstellation/x/wasm/client/utils"
+	"github.com/konstellation/konstellation/x/wasm/internal/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	wasmUtils "github.com/konstellation/konstellation/x/wasm/client/utils"
-	"github.com/konstellation/konstellation/x/wasm/types"
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 )

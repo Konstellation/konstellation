@@ -5,6 +5,11 @@ import (
 	"encoding/json"
 	"math/rand"
 
+	"github.com/konstellation/konstellation/x/wasm/client/cli"
+	"github.com/konstellation/konstellation/x/wasm/client/rest"
+	"github.com/konstellation/konstellation/x/wasm/internal/keeper"
+	"github.com/konstellation/konstellation/x/wasm/internal/types"
+	"github.com/konstellation/konstellation/x/wasm/simulation"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -15,11 +20,6 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/konstellation/konstellation/x/wasm/client/cli"
-	"github.com/konstellation/konstellation/x/wasm/client/rest"
-	"github.com/konstellation/konstellation/x/wasm/keeper"
-	"github.com/konstellation/konstellation/x/wasm/simulation"
-	"github.com/konstellation/konstellation/x/wasm/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -111,12 +111,12 @@ func NewAppModule(cdc codec.Marshaler, keeper *Keeper, validatorSetSource keeper
 }
 
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(keeper.NewDefaultPermissionKeeper(am.keeper)))
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), NewQuerier(am.keeper))
 }
 
 func (am AppModule) LegacyQuerierHandler(amino *codec.LegacyAmino) sdk.Querier {
-	return keeper.NewLegacyQuerier(am.keeper, am.keeper.QueryGasLimit())
+	return keeper.NewLegacyQuerier(am.keeper)
 }
 
 // RegisterInvariants registers the wasm module invariants.
@@ -124,7 +124,7 @@ func (am AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {}
 
 // Route returns the message routing key for the wasm module.
 func (am AppModule) Route() sdk.Route {
-	return sdk.NewRoute(RouterKey, NewHandler(keeper.NewDefaultPermissionKeeper(am.keeper)))
+	return sdk.NewRoute(RouterKey, NewHandler(am.keeper))
 }
 
 // QuerierRoute returns the wasm module's querier route name.

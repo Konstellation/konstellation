@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -260,7 +261,7 @@ type KonstellationApp struct {
 // NewKonstellationApp is a constructor function for KonstellationApp
 func NewKonstellationApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loadLatest bool,
 	skipUpgradeHeights map[int64]bool, homePath string, invCheckPeriod uint, enabledProposals []wasm.ProposalType,
-	appOpts servertypes.AppOptions, baseAppOptions ...func(*baseapp.BaseApp)) *KonstellationApp {
+	appOpts servertypes.AppOptions, wasmOpts []wasm.Option, baseAppOptions ...func(*baseapp.BaseApp)) *KonstellationApp {
 
 	// First define the top level codec that will be shared by the different modules
 	encodingConfig := MakeEncodingConfig()
@@ -268,7 +269,9 @@ func NewKonstellationApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loa
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 
 	// BaseApp handles interactions with Tendermint through the ABCI protocol
+	fmt.Println("here1")
 	bApp := baseapp.NewBaseApp(appName, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
+	fmt.Println("here2")
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetAppVersion(version.Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
@@ -448,12 +451,15 @@ func NewKonstellationApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loa
 		app.ibcKeeper.ChannelKeeper,
 		&app.ibcKeeper.PortKeeper,
 		scopedWasmKeeper,
-		app.transferKeeper,
+		//app.transferKeeper,
 		app.Router(),
 		app.GRPCQueryRouter(),
 		wasmDir,
 		wasmConfig,
 		supportedFeatures,
+		nil,
+		nil,
+		wasmOpts...,
 	)
 
 	//app.oracleKeeper,

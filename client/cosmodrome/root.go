@@ -172,13 +172,13 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts serverty
 	if err != nil {
 		panic(err)
 	}
-	//var emptyWasmOpts []wasm.Option
+	var emptyWasmOpts []wasm.Option
 	return app.NewKonstellationApp(logger, db, traceStore, true, skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
 		app.GetEnabledProposals(),
 		appOpts,
-		//emptyWasmOpts,
+		emptyWasmOpts,
 		baseapp.SetPruning(pruningOpts),
 		baseapp.SetMinGasPrices(cast.ToString(appOpts.Get(server.FlagMinGasPrices))),
 		baseapp.SetHaltHeight(cast.ToUint64(appOpts.Get(server.FlagHaltHeight))),
@@ -202,15 +202,15 @@ func createKnstlAppAndExport(
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home not set")
 	}
-	//var emptyWasmOpts []wasm.Option
+	var emptyWasmOpts []wasm.Option
 	if height != -1 {
-		knstlApp = app.NewKonstellationApp(logger, db, traceStore, false, map[int64]bool{}, homePath, uint(1), app.GetEnabledProposals(), appOpts)
+		knstlApp = app.NewKonstellationApp(logger, db, traceStore, false, map[int64]bool{}, homePath, uint(1), app.GetEnabledProposals(), appOpts, emptyWasmOpts)
 
 		if err := knstlApp.LoadHeight(height); err != nil {
 			return servertypes.ExportedApp{}, err
 		}
 	} else {
-		knstlApp = app.NewKonstellationApp(logger, db, traceStore, true, map[int64]bool{}, homePath, uint(1), app.GetEnabledProposals(), appOpts)
+		knstlApp = app.NewKonstellationApp(logger, db, traceStore, true, map[int64]bool{}, homePath, uint(1), app.GetEnabledProposals(), appOpts, emptyWasmOpts)
 	}
 
 	return knstlApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)

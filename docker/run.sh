@@ -6,4 +6,4 @@ if test -n "$1"; then
 fi
 
 mkdir -p /root/log
-knstld start --rpc.laddr tcp://0.0.0.0:26657 --trace
+knstld start --rpc.laddr tcp://0.0.0.0:26657 --trace --log_level info

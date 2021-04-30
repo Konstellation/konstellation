@@ -3,9 +3,9 @@ package ibctesting
 import (
 	"bytes"
 	"fmt"
-	ibctesting "github.com/cosmos/cosmos-sdk/x/ibc/testing"
 	wasmd "github.com/konstellation/konstellation/app"
-	"github.com/konstellation/konstellation/x/wasm/keeper"
+	"github.com/konstellation/konstellation/x/wasm/internal/keeper"
+	ibctesting "github.com/cosmos/cosmos-sdk/x/ibc/testing"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -89,7 +89,7 @@ var (
 type TestChain struct {
 	t *testing.T
 
-	App           *wasmd.WasmApp
+	App           *wasmd.KonstellationApp
 	ChainID       string
 	LastHeader    *ibctmtypes.Header // header for last block height committed
 	CurrentHeader tmproto.Header     // header for current block height

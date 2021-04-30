@@ -29,25 +29,25 @@ then
       echo "${KEY_PASSWORD}"
       echo "${KEY_PASSWORD}"
       echo
-    } | knstld keys add "${KEY_NAME}" --recover
+    } | knstld keys add "${KEY_NAME}" --recover --log_level info
   # hardcode the validator account for this instance
 else
     {
       echo "${KEY_PASSWORD}"
       echo "${KEY_PASSWORD}"
       echo
-    } | knstld keys add "${KEY_NAME}"
+    } | knstld keys add "${KEY_NAME}" --log_level info
 fi
-echo "$KEY_PASSWORD" | knstld add-genesis-account "$KEY_NAME" "200000000000$STAKE"
+echo "$KEY_PASSWORD" | knstld add-genesis-account "$KEY_NAME" "200000000000$STAKE" --log_level info
 
 # (optionally) add a few more genesis accounts
 for addr in "$@"; do
   echo $addr
-  knstld add-genesis-account "$addr" "200000000000$STAKE"
+  knstld add-genesis-account "$addr" "200000000000$STAKE" --log_level info
 done
 # submit a genesis validator tx
 ## Workraround for https://github.com/cosmos/cosmos-sdk/issues/8251
-(echo "$KEY_PASSWORD"; echo "$KEY_PASSWORD"; echo "$KEY_PASSWORD") | knstld gentx "$KEY_NAME" "100000000000$STAKE" --chain-id="$CHAIN_ID" --amount="100000000000$STAKE"
+(echo "$KEY_PASSWORD"; echo "$KEY_PASSWORD"; echo "$KEY_PASSWORD") | knstld gentx "$KEY_NAME" "100000000000$STAKE" --chain-id="$CHAIN_ID" --amount="100000000000$STAKE" --log_level info
 ## should be:
 # (echo "$PASSWORD"; echo "$PASSWORD"; echo "$PASSWORD") | knstld gentx validator "250000000$STAKE" --chain-id="$CHAIN_ID"
-knstld collect-gentxs
+knstld collect-gentxs --log_level info

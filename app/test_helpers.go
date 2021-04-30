@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/konstellation/konstellation/x/wasm"
 	"strconv"
 	"testing"
 	"time"
@@ -49,9 +50,9 @@ var DefaultConsensusParams = &abci.ConsensusParams{
 	},
 }
 
-func setup(withGenesis bool, invCheckPeriod uint) (*KonstellationApp, GenesisState) {
+func setup(withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*KonstellationApp, GenesisState) {
 	db := dbm.NewMemDB()
-	app := NewKonstellationApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, DefaultNodeHome, invCheckPeriod, GetEnabledProposals(), EmptyBaseAppOptions{})
+	app := NewKonstellationApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, DefaultNodeHome, invCheckPeriod, GetEnabledProposals(), EmptyBaseAppOptions{}, opts)
 	if withGenesis {
 		return app, NewDefaultGenesisState()
 	}

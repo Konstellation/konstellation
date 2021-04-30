@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/konstellation/konstellation/x/wasm/internal/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	govrest "github.com/cosmos/cosmos-sdk/x/gov/client/rest"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
-	"github.com/konstellation/konstellation/x/wasm/types"
 )
 
 type StoreCodeProposalJsonReq struct {

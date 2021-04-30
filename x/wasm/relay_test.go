@@ -2,6 +2,11 @@ package wasm_test
 
 import (
 	"encoding/json"
+	wasmd "github.com/konstellation/konstellation/app"
+	"github.com/konstellation/konstellation/x/wasm/ibctesting"
+	wasmkeeper "github.com/konstellation/konstellation/x/wasm/internal/keeper"
+	wasmtesting "github.com/konstellation/konstellation/x/wasm/internal/keeper/wasmtesting"
+	"github.com/konstellation/konstellation/x/wasm/internal/types"
 	wasmvm "github.com/CosmWasm/wasmvm"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,11 +15,6 @@ import (
 	clienttypes "github.com/cosmos/cosmos-sdk/x/ibc/core/02-client/types"
 	channeltypes "github.com/cosmos/cosmos-sdk/x/ibc/core/04-channel/types"
 	ibcexported "github.com/cosmos/cosmos-sdk/x/ibc/core/exported"
-	wasmd "github.com/konstellation/konstellation/app"
-	"github.com/konstellation/konstellation/x/wasm/ibctesting"
-	wasmkeeper "github.com/konstellation/konstellation/x/wasm/keeper"
-	wasmtesting "github.com/konstellation/konstellation/x/wasm/keeper/wasmtesting"
-	"github.com/konstellation/konstellation/x/wasm/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"

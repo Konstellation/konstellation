@@ -2,8 +2,8 @@ package ibctesting
 
 import (
 	"fmt"
+	"github.com/konstellation/konstellation/x/wasm/internal/keeper"
 	ibctesting "github.com/cosmos/cosmos-sdk/x/ibc/testing"
-	"github.com/konstellation/konstellation/x/wasm/keeper"
 	"strconv"
 	"testing"
 	"time"

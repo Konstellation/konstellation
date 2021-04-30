@@ -4,13 +4,13 @@ import (
 	"net/http"
 	"strconv"
 
+	wasmUtils "github.com/konstellation/konstellation/x/wasm/client/utils"
+	"github.com/konstellation/konstellation/x/wasm/internal/types"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/gorilla/mux"
-	wasmUtils "github.com/konstellation/konstellation/x/wasm/client/utils"
-	"github.com/konstellation/konstellation/x/wasm/types"
 )
 
 func registerTxRoutes(cliCtx client.Context, r *mux.Router) {
