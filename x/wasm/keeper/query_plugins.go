@@ -3,7 +3,9 @@ package keeper
 import (
 	"encoding/json"
 	"fmt"
+
 	channeltypes "github.com/cosmos/cosmos-sdk/x/ibc/core/04-channel/types"
+	oraclekeeper "github.com/konstellation/konstellation/x/oracle/keeper"
 	"github.com/konstellation/konstellation/x/wasm/types"
 
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
@@ -66,6 +68,7 @@ type QueryPlugins struct {
 	IBC      func(ctx sdk.Context, caller sdk.AccAddress, request *wasmvmtypes.IBCQuery) ([]byte, error)
 	Staking  func(ctx sdk.Context, request *wasmvmtypes.StakingQuery) ([]byte, error)
 	Stargate func(ctx sdk.Context, request *wasmvmtypes.StargateQuery) ([]byte, error)
+	Oracle   func(ctx sdk.Context, request *OracleQuery) ([]byte, error)
 	Wasm     func(ctx sdk.Context, request *wasmvmtypes.WasmQuery) ([]byte, error)
 }
 
@@ -85,6 +88,7 @@ func DefaultQueryPlugins(
 	distKeeper types.DistributionKeeper,
 	channelKeeper types.ChannelKeeper,
 	queryRouter GRPCQueryRouter,
+	oracle oraclekeeper.Keeper,
 	wasm wasmQueryKeeper,
 ) QueryPlugins {
 	return QueryPlugins{
@@ -93,6 +97,7 @@ func DefaultQueryPlugins(
 		IBC:      IBCQuerier(wasm, channelKeeper),
 		Staking:  StakingQuerier(staking, distKeeper),
 		Stargate: StargateQuerier(queryRouter),
+		Oracle:   OracleQuerier(oracle),
 		Wasm:     WasmQuerier(wasm),
 	}
 }
@@ -470,5 +475,22 @@ func convertSdkCoinToWasmCoin(coin sdk.Coin) wasmvmtypes.Coin {
 	return wasmvmtypes.Coin{
 		Denom:  coin.Denom,
 		Amount: coin.Amount.String(),
+	}
+}
+
+type OracleQuery struct {
+}
+
+func OracleQuerier(keeper oraclekeeper.Keeper) func(ctx sdk.Context, request *OracleQuery) ([]byte, error) {
+	return func(ctx sdk.Context, request *OracleQuery) ([]byte, error) {
+		//if request.BondedDenom != nil {
+		//}
+		//if request.Validators != nil {
+		//}
+		//if request.AllDelegations != nil {
+		//}
+		//if request.Delegation != nil {
+		//}
+		return nil, wasmvmtypes.UnsupportedRequest{Kind: "unknown oracle variant"}
 	}
 }

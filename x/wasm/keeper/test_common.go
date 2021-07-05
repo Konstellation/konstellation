@@ -4,6 +4,9 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -53,6 +56,9 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
+	"github.com/konstellation/konstellation/x/oracle"
+	oraclekeeper "github.com/konstellation/konstellation/x/oracle/keeper"
+	oracletypes "github.com/konstellation/konstellation/x/oracle/types"
 	"github.com/konstellation/konstellation/x/wasm/keeper/wasmtesting"
 	"github.com/konstellation/konstellation/x/wasm/types"
 	"github.com/stretchr/testify/require"
@@ -62,8 +68,6 @@ import (
 	"github.com/tendermint/tendermint/libs/rand"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
-	"io/ioutil"
-	"time"
 )
 
 type TestingT interface {
@@ -169,6 +173,7 @@ func createTestInput(
 	keyParams := sdk.NewKVStoreKey(paramstypes.StoreKey)
 	tkeyParams := sdk.NewTransientStoreKey(paramstypes.TStoreKey)
 	keyGov := sdk.NewKVStoreKey(govtypes.StoreKey)
+	keyOracle := sdk.NewKVStoreKey(oracletypes.StoreKey)
 	keyIBC := sdk.NewKVStoreKey(ibchost.StoreKey)
 	keyCapability := sdk.NewKVStoreKey(capabilitytypes.StoreKey)
 	keyCapabilityTransient := storetypes.NewMemoryStoreKey(capabilitytypes.MemStoreKey)
@@ -182,6 +187,7 @@ func createTestInput(
 	ms.MountStoreWithDB(keyDistro, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(tkeyParams, sdk.StoreTypeTransient, db)
 	ms.MountStoreWithDB(keyGov, sdk.StoreTypeIAVL, db)
+	ms.MountStoreWithDB(keyOracle, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyIBC, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyCapability, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyCapabilityTransient, sdk.StoreTypeMemory, db)
@@ -202,6 +208,7 @@ func createTestInput(
 	paramsKeeper.Subspace(distributiontypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
 	paramsKeeper.Subspace(crisistypes.ModuleName)
+	paramsKeeper.Subspace(oracletypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(capabilitytypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
@@ -255,6 +262,13 @@ func createTestInput(
 	// set genesis items required for distribution
 	distKeeper.SetFeePool(ctx, distributiontypes.InitialFeePool())
 
+	oracleSubsp, _ := paramsKeeper.GetSubspace(oracletypes.ModuleName)
+	oracleKeeper := oraclekeeper.NewKeeper(
+		appCodec,
+		keyOracle,
+		oracleSubsp,
+	)
+
 	// set some funds ot pay out validatores, based on code from:
 	// https://github.com/cosmos/cosmos-sdk/blob/fea231556aee4d549d7551a6190389c4328194eb/x/distribution/keeper/keeper_test.go#L50-L57
 	distrAcc := distKeeper.GetDistributionAccount(ctx)
@@ -280,6 +294,8 @@ func createTestInput(
 	router.AddRoute(sdk.NewRoute(stakingtypes.RouterKey, sh))
 	dh := distribution.NewHandler(distKeeper)
 	router.AddRoute(sdk.NewRoute(distributiontypes.RouterKey, dh))
+	oh := oracle.NewHandler(oracleKeeper)
+	router.AddRoute(sdk.NewRoute(oracletypes.RouterKey, oh))
 
 	querier := baseapp.NewGRPCQueryRouter()
 	banktypes.RegisterQueryServer(querier, bankKeeper)
@@ -294,6 +310,7 @@ func createTestInput(
 		bankKeeper,
 		stakingKeeper,
 		distKeeper,
+		oracleKeeper,
 		ibcKeeper.ChannelKeeper,
 		&ibcKeeper.PortKeeper,
 		scopedWasmKeeper,

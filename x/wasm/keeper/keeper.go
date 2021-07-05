@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"path/filepath"
+	"time"
+
 	wasmvm "github.com/CosmWasm/wasmvm"
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -13,12 +16,11 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	oraclekeeper "github.com/konstellation/konstellation/x/oracle/keeper"
 	"github.com/konstellation/konstellation/x/wasm/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/libs/log"
-	"path/filepath"
-	"time"
 )
 
 // GasMultiplier is how many cosmwasm gas points = 1 sdk gas point
@@ -93,6 +95,7 @@ func NewKeeper(
 	bankKeeper types.BankKeeper,
 	stakingKeeper types.StakingKeeper,
 	distKeeper types.DistributionKeeper,
+	oracleKeeper oraclekeeper.Keeper,
 	channelKeeper types.ChannelKeeper,
 	portKeeper types.PortKeeper,
 	capabilityKeeper types.CapabilityKeeper,
@@ -125,7 +128,7 @@ func NewKeeper(
 		queryGasLimit:    wasmConfig.SmartQueryGasLimit,
 		paramSpace:       paramSpace,
 	}
-	keeper.wasmVMQueryHandler = DefaultQueryPlugins(bankKeeper, stakingKeeper, distKeeper, channelKeeper, queryRouter, &keeper)
+	keeper.wasmVMQueryHandler = DefaultQueryPlugins(bankKeeper, stakingKeeper, distKeeper, channelKeeper, queryRouter, oracleKeeper, &keeper)
 	for _, o := range opts {
 		o.apply(&keeper)
 	}

@@ -6,12 +6,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"testing"
 	"time"
+
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -21,6 +22,7 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	fuzz "github.com/google/gofuzz"
+	oraclekeeper "github.com/konstellation/konstellation/x/oracle/keeper"
 	"github.com/konstellation/konstellation/x/wasm/types"
 	wasmTypes "github.com/konstellation/konstellation/x/wasm/types"
 	"github.com/stretchr/testify/assert"
@@ -664,7 +666,7 @@ func setupKeeper(t *testing.T) (*Keeper, sdk.Context, []sdk.StoreKey) {
 	wasmConfig := wasmTypes.DefaultWasmConfig()
 	pk := paramskeeper.NewKeeper(encodingConfig.Marshaler, encodingConfig.Amino, keyParams, tkeyParams)
 
-	srcKeeper := NewKeeper(encodingConfig.Marshaler, keyWasm, pk.Subspace(wasmTypes.DefaultParamspace), authkeeper.AccountKeeper{}, nil, stakingkeeper.Keeper{}, distributionkeeper.Keeper{}, nil, nil, nil, nil, nil, nil, tempDir, wasmConfig, SupportedFeatures)
+	srcKeeper := NewKeeper(encodingConfig.Marshaler, keyWasm, pk.Subspace(wasmTypes.DefaultParamspace), authkeeper.AccountKeeper{}, nil, stakingkeeper.Keeper{}, distributionkeeper.Keeper{}, oraclekeeper.Keeper{}, nil, nil, nil, nil, nil, tempDir, wasmConfig, SupportedFeatures)
 	return &srcKeeper, ctx, []sdk.StoreKey{keyWasm, keyParams}
 }
 

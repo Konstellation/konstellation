@@ -445,6 +445,7 @@ func NewKonstellationApp(logger log.Logger, db dbm.DB, traceStore io.Writer, loa
 		app.bankKeeper,
 		app.stakingKeeper,
 		app.distrKeeper,
+		app.oracleKeeper,
 		app.ibcKeeper.ChannelKeeper,
 		&app.ibcKeeper.PortKeeper,
 		scopedWasmKeeper,
